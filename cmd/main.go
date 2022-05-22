@@ -6,6 +6,9 @@ import (
 	"os"
 
 	"github.com/leeerraaa/backend-app/internal/config"
+	"github.com/leeerraaa/backend-app/internal/repository/psql"
+	"github.com/leeerraaa/backend-app/internal/service"
+	"github.com/leeerraaa/backend-app/internal/transport/rest"
 	"github.com/leeerraaa/backend-app/pkg/database"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -49,11 +52,13 @@ func main() {
 	}
 	defer db.Close()
 
-	// TODO
+	documentsRepo := psql.NewRepository(db)
+	documentsService := service.NewService(documentsRepo)
+	handler := rest.NewHandler(documentsService)
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%d", cfg.Server.Port),
-		// Handler: handler.InitRouter(),
+		Handler: handler.InitRouter(),
 	}
 
 	logrus.Infoln("Server has been running...")
