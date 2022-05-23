@@ -1,0 +1,32 @@
+version: '3.9'
+services:
+  backend-app:
+    build: ./
+    command: ./wait-for-postgres.sh postgresdb ./backend-app
+    container_name: backend-app
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - DATABASE_HOST=${DB_HOST}
+      - DATABASE_PORT=${DB_PORT}
+    tty: true
+    ports:
+      - 8000:8080
+    restart: on-failure
+    depends_on:
+      - postgresdb
+
+  postgresdb:
+    restart: always
+    image: postgres:latest
+    container_name: postgresdb
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - DATABASE_HOST=${DB_HOST}
+    ports:
+      - 5436:5432
+    volumes:
+      - ./.database/postgres/data:/var/lib/postgresql/data

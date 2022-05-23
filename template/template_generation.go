@@ -14,8 +14,8 @@ func GenerateDocx(document domain.Document) (string, error) {
 		return "", err
 	}
 
-	pathToTemplate := mydir + "\\template\\template.docx"
-	pathToNew := mydir + "\\template\\result.docx"
+	pathToTemplate := mydir + "/template/template.docx"
+	pathToNew := mydir + "/template/result.docx"
 
 	replaceMap := docx.PlaceholderMap{
 		"_specialty_":           document.Specialty,
@@ -45,7 +45,7 @@ func GenerateDocx(document domain.Document) (string, error) {
 
 	logrus.Println("Success")
 
-	returnedPath := mydir + "\\template\\"
+	returnedPath := mydir + "/template/"
 
 	return returnedPath, nil
 }
