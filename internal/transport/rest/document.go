@@ -2,7 +2,9 @@ package rest
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/leeerraaa/backend-app/internal/domain"
@@ -21,11 +23,27 @@ func (h *Handler) downloadDocument(c *gin.Context) {
 		return
 	}
 
-	_, err := template.GenerateDocx(document)
+	filePath, err := template.GenerateDocx(document)
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
+
+	nameFile := "result.docx"
+
+	file, err := ioutil.ReadFile(filePath + nameFile)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.Writer.Header().Set("Content-Type", "application/octet-stream")
+	c.Writer.Header().Set("Content-Disposition", "attachment; filename="+nameFile+"")
+	c.Writer.Header().Set("Content-Length", strconv.Itoa(len(file)))
+
+	c.Writer.WriteHeader(http.StatusOK)
+
+	c.Writer.Write(file)
 }
 
 func (h *Handler) documentList(c *gin.Context) {

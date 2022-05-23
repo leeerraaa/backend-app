@@ -8,7 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func GenerateDocx(document domain.Document)  (string, error) {
+func GenerateDocx(document domain.Document) (string, error) {
 	mydir, err := os.Getwd()
 	if err != nil {
 		return "", err
@@ -31,6 +31,7 @@ func GenerateDocx(document domain.Document)  (string, error) {
 	if err != nil {
 		return "", err
 	}
+	defer doc.Close()
 
 	err = doc.ReplaceAll(replaceMap)
 	if err != nil {
@@ -44,5 +45,7 @@ func GenerateDocx(document domain.Document)  (string, error) {
 
 	logrus.Println("Success")
 
-	return pathToNew, nil
+	returnedPath := mydir + "\\template\\"
+
+	return returnedPath, nil
 }
