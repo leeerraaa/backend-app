@@ -17,6 +17,14 @@ func GenerateDocx(document domain.Document) (string, error) {
 	pathToTemplate := mydir + "/template/template.docx"
 	pathToNew := mydir + "/template/result.docx"
 
+	if document.EducationalProgram == "'Системний аналіз' 2016" && document.Subject == "Комп'ютерна обробка зображень та мультимедіа" {
+		pathToTemplate = mydir + "/template/template-analiz-media.docx"
+	}
+
+	if document.EducationalProgram == "'Системний аналіз' 2016" && document.Subject == "Інтернет-технології та проектування WEB-додатків" {
+		pathToTemplate = mydir + "/template/template-analiz-web.docx"
+	}
+
 	replaceMap := docx.PlaceholderMap{
 		"_specialty_":           document.Specialty,
 		"_educational_level_":   document.EducationalLevel,
